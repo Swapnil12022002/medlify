@@ -1,11 +1,19 @@
-import express from "express";
-const app = express();
-const port = 5000;
+import "dotenv/config"
+import app from "./app"
+import mongoConnection from "../config/database";
+import env from "../utils/validateEnv"
 
-app.get("/", (req, res)=>{
-    res.send("Hello mom")
-})
+const port = env.PORT;
 
-app.listen(port, ()=>{
-    console.log(`Server running on port: ${port}`);
-})
+const appStart = async() : Promise<void> => {
+    try {
+        await mongoConnection(env.MONGO_URI);
+        app.listen(port, ()=>{
+            console.log(`Server running on port: ${port}`);
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+appStart();
