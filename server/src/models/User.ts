@@ -1,4 +1,4 @@
-import { InferSchemaType, Schema, model, Document } from "mongoose";
+import {Schema, model, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import env from "../utils/validateEnv";
@@ -34,7 +34,6 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: 6,
-      select: false,
     },
     role: {
       type: String,

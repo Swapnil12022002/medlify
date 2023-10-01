@@ -18,7 +18,7 @@ export const registerUserCtrl = asyncHandler(async (req, res) => {
 });
 
 export const loginUserCtrl = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body;  
   if (!email || !password) {
     throw new BadRequestError("Please provide email and password");
   }
@@ -31,8 +31,6 @@ export const loginUserCtrl = asyncHandler(async (req, res) => {
     throw new UnAuthenticatedError("Incorrect password");
   }
   const token = loggedInUser.generateToken();
-  console.log(token);
-
   res.status(StatusCodes.OK).json({
     success: true,
     message: "User logged in successfully",
