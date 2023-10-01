@@ -1,7 +1,7 @@
 import "dotenv/config";
 import app from "./app";
 import mongoConnection from "../config/database";
-import env from "./utils/validateEnv";
+import env from "../utils/validateEnv";
 
 const port = env.PORT;
 

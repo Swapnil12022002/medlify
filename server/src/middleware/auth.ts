@@ -1,11 +1,11 @@
-import env from "../utils/validateEnv";
+import env from "../../utils/validateEnv";
 import { Response, Request, NextFunction } from "express";
 import { UnAuthenticatedError } from "../errors";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import User, { UserDocument } from "../models/User";
+import User from "../models/User";
 
 interface AuthRequest extends Request {
-  user?: UserDocument;
+  user?: object;
 }
 
 const authMiddleware = async (

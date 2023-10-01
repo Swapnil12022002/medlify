@@ -1,25 +1,20 @@
-import {Schema, model, Model } from "mongoose";
+import {Schema, model, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import env from "../../utils/validateEnv";
+import env from "../utils/validateEnv"
 
-interface IUser {
+export interface UserDocument extends Document {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   role: "user" | "doctor" | "admin";
-}
-
-interface IUserMethods {
   matchPassword: (enteredPassword: string) => Promise<boolean>;
   generateToken: () => string;
   isModified: (path?: string | string[]) => boolean;
 }
 
-type UserModel = Model<IUser, object, IUserMethods>;
-
-const userSchema = new Schema<IUser, UserModel, IUserMethods>(
+const userSchema = new Schema(
   {
     firstName: {
       type: String,
@@ -49,7 +44,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre<UserDocument>("save", async function (next) {
   if (!this.isModified("password")) {
     next();
   }
@@ -70,4 +65,4 @@ userSchema.methods.generateToken = function (): string {
   });
 };
 
-export default model<IUser, UserModel>('User', userSchema);
+export default model<UserDocument>("User", userSchema);
