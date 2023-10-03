@@ -1,7 +1,7 @@
 import {Schema, model, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import env from "../utils/validateEnv"
+import env from "../server/utils/validateEnv"
 
 export interface UserDocument extends Document {
   firstName: string;
