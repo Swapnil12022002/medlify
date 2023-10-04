@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Navbar from "./components/func-components/Navigation";
+import Home from "./components/func-components/Home";
 import { useAppSelector } from "./state/hooks";
 import { selectTheme } from "./state/reducers/themeReducer";
 
@@ -9,7 +10,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        Component: Navbar,
+        Component: Home,
       },
     ],
   },
