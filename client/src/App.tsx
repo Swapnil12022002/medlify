@@ -1,5 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Navbar from "./components/func-components/Navigation";
+import { useAppSelector } from "./state/hooks";
+import { selectTheme } from "./state/reducers/themeReducer";
 
 const router = createBrowserRouter([
   {
@@ -14,5 +16,10 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  const theme = useAppSelector(selectTheme);
+  return (
+    <div className={`${theme ? "bg-black" : ""}`}>
+      <RouterProvider router={router} />
+    </div>
+  );
 }

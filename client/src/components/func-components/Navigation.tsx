@@ -24,7 +24,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useAppSelector, useAppDispatch } from "@/state/hooks";
+import { selectTheme } from "@/state/reducers/themeReducer";
+import { toggleTheme } from "@/state/reducers/themeReducer";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { MdDarkMode } from "react-icons/md";
+import { BsLightbulb } from "react-icons/bs";
+
+const darkNavigationMenuTrigger =
+  "text-white group inline-flex h-9 w-max items-center justify-center rounded-md bg-foreground px-4 py-2 text-sm font-medium transition-colors hover:bg-accent-foreground hover:text-accent focus:bg-accent-foreground focus:text-accent focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent-foreground/50 data-[state=open]:bg-accent-foreground/50";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -65,10 +73,16 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export default function Navbar() {
+  const theme = useAppSelector(selectTheme);
+  const dispatch = useAppDispatch();
   return (
     <div className="flex flex-row justify-between items-center w-full h-[50px]">
       <div className="pl-0 sm:pl-2 md:pl-3 lg:pl-5">
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+        <h3
+          className={`${
+            theme ? "text-white" : ""
+          } scroll-m-20 text-2xl font-semibold tracking-tight`}
+        >
           MEDLIFY
         </h3>
       </div>
@@ -76,7 +90,15 @@ export default function Navbar() {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+              <NavigationMenuTrigger
+                className={
+                  theme
+                    ? "text-white bg-foreground hover:bg-accent-foreground hover:text-accent focus:bg-accent-foreground focus:text-accent data-[active]:bg-accent-foreground/50 data-[state=open]:bg-accent-foreground/50"
+                    : ""
+                }
+              >
+                Getting started
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                   <li className="row-span-3">
@@ -111,7 +133,15 @@ export default function Navbar() {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+              <NavigationMenuTrigger
+                className={
+                  theme
+                    ? "text-white bg-foreground hover:bg-accent-foreground hover:text-accent focus:bg-accent-foreground focus:text-accent data-[active]:bg-accent-foreground/50 data-[state=open]:bg-accent-foreground/50"
+                    : ""
+                }
+              >
+                Components
+              </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                   {components.map((component) => (
@@ -128,17 +158,45 @@ export default function Navbar() {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <a href="/docs">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink
+                  className={
+                    theme
+                      ? darkNavigationMenuTrigger
+                      : navigationMenuTriggerStyle()
+                  }
+                >
                   Documentation
                 </NavigationMenuLink>
               </a>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                className="cursor-pointer"
+                onClick={() => dispatch(toggleTheme())}
+              >
+                {!theme ? (
+                  <MdDarkMode size={20} />
+                ) : (
+                  <BsLightbulb size={20} className="text-white" />
+                )}
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
       </div>
       <div className="flex flex-row md:gap-[0.5px] lg:gap-4 pr-0 sm:pr-2 md:pr-3 lg:pr-5 min-[320px]:hidden md:block">
-        <Button variant="ghost">Login</Button>
-        <Button variant="ghost">Sign up</Button>
+        <Button
+          variant={theme ? "darkGhost" : "ghost"}
+          className={theme ? "text-white" : ""}
+        >
+          Login
+        </Button>
+        <Button
+          variant={theme ? "darkGhost" : "ghost"}
+          className={theme ? "text-white" : ""}
+        >
+          Sign up
+        </Button>
       </div>
       <div className="md:hidden pr-0 sm:pr-2">
         <DropdownMenu>
