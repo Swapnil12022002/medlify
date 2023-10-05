@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import Login from "./Login";
 import { useAppSelector, useAppDispatch } from "@/state/hooks";
 import { selectTheme } from "@/state/reducers/themeReducer";
 import { toggleTheme } from "@/state/reducers/themeReducer";
@@ -188,12 +189,7 @@ export default function Navbar() {
           </NavigationMenu>
         </div>
         <div className="flex flex-row md:gap-[0.5px] lg:gap-4 pr-0 sm:pr-2 md:pr-3 lg:pr-5 min-[320px]:hidden md:block">
-          <Button
-            variant={theme ? "darkGhost" : "ghost"}
-            className={theme ? "text-white" : ""}
-          >
-            Login
-          </Button>
+          <Login>Login</Login>
           <Button
             variant={theme ? "darkGhost" : "ghost"}
             className={theme ? "text-white" : ""}
