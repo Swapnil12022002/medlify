@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Login from "./Login";
+import SignUp from "./Signup";
+import SignUpFromLogin from "./SignUpFromLogin";
 import { useAppSelector, useAppDispatch } from "@/state/hooks";
 import { selectTheme } from "@/state/reducers/themeReducer";
 import { toggleTheme } from "@/state/reducers/themeReducer";
@@ -77,6 +79,11 @@ const components: { title: string; href: string; description: string }[] = [
 export default function Navbar() {
   const theme = useAppSelector(selectTheme);
   const dispatch = useAppDispatch();
+  const [signUpFromLogin, setAuthSignUpFromLogin] =
+    React.useState<boolean>(false);
+  const handleSignUpFromLogin = () => {
+    setAuthSignUpFromLogin(!signUpFromLogin);
+  };
   return (
     <>
       <div className="flex flex-row justify-between items-center w-full h-[50px]">
@@ -189,13 +196,14 @@ export default function Navbar() {
           </NavigationMenu>
         </div>
         <div className="flex flex-row md:gap-[0.5px] lg:gap-4 pr-0 sm:pr-2 md:pr-3 lg:pr-5 min-[320px]:hidden md:block">
-          <Login>Login</Login>
-          <Button
-            variant={theme ? "darkGhost" : "ghost"}
-            className={theme ? "text-white" : ""}
+          <Login onHandleSignUp={handleSignUpFromLogin}>Login</Login>
+          <SignUpFromLogin
+            onSignUp={signUpFromLogin}
+            onHandleSignUp={handleSignUpFromLogin}
           >
             Sign up
-          </Button>
+          </SignUpFromLogin>
+          <SignUp>Sign up</SignUp>
         </div>
         <div className="md:hidden pr-0 sm:pr-2">
           <DropdownMenu>

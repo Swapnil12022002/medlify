@@ -24,9 +24,46 @@ interface SerializedError {
 interface UserState {
   loading?: boolean;
   user?: User | null;
-  appErr?: string;
-  serverErr?: string;
+  appErr?: string | undefined;
+  serverErr?: string | undefined;
 }
+
+const localStorageUser = localStorage.getItem("userInfo");
+const userInfo = localStorageUser ? JSON.parse(localStorageUser) : null;
+
+const initialState: UserState = {
+  user: userInfo,
+};
+
+export const userRegisterAction = createAsyncThunk<
+  User,
+  any,
+  { rejectValue: SerializedError }
+>("users/register", async (user, { rejectWithValue }) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    const { data } = await axios.post<User>(
+      "http://localhost:8000/api/v1/users/register",
+      user,
+      config
+    );
+    return data;
+  } catch (error) {
+    if (!axios.isAxiosError(error)) {
+      throw error;
+    }
+    const axiosError = error as AxiosError<SerializedError>;
+    if (axiosError.response) {
+      return rejectWithValue(axiosError.response.data);
+    } else {
+      throw error;
+    }
+  }
+});
 
 export const userLoginAction = createAsyncThunk<
   User,
@@ -59,18 +96,29 @@ export const userLoginAction = createAsyncThunk<
   }
 });
 
-const localStorageUser = localStorage.getItem("userInfo");
-const userInfo = localStorageUser ? JSON.parse(localStorageUser) : null;
-
-const initialState: UserState = {
-  user: userInfo,
-};
-
 const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    //register
+    builder.addCase(userRegisterAction.pending, (state) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(userRegisterAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(userRegisterAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action.payload?.message;
+      state.serverErr = action.error?.message;
+    });
+    //login
     builder.addCase(userLoginAction.pending, (state) => {
       state.loading = true;
       state.appErr = undefined;

@@ -1,60 +1,51 @@
-/* eslint-disable prefer-const */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Spinner from "./Spinner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAppSelector, useAppDispatch } from "@/state/hooks";
-import { userLoginAction } from "@/state/reducers/userReducer";
+import { userRegisterAction } from "@/state/reducers/userReducer";
 import { selectTheme } from "@/state/reducers/themeReducer";
-import { selectUserValues } from "@/state/reducers/userReducer";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-// import SignUp from "./Signup";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 interface LoginProps {
   children: ReactNode;
-  onHandleSignUp: () => void;
 }
 
 const loginSchema = Yup.object({
+  firstName: Yup.string().required("First Name is Required"),
+  lastName: Yup.string().required("Last Name is Required"),
   email: Yup.string().required("Email is Required"),
   password: Yup.string().required("Password is Required"),
 });
 
-export default function Login({ children, onHandleSignUp }: LoginProps) {
+export default function SignUp({ children }: LoginProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const theme = useAppSelector(selectTheme);
-  const userValues = useAppSelector(selectUserValues);
-  const { loading, user, appErr, serverErr } = userValues;
   const formik = useFormik({
     initialValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
     },
     onSubmit: (values) => {
-      dispatch(userLoginAction(values));
+      dispatch(userRegisterAction(values));
+      navigate("/anything");
     },
     validationSchema: loginSchema,
   });
-
-  useEffect(() => {
-    if (!appErr && !serverErr && !loading && user) {
-      navigate("/anything");
-    }
-  }, [appErr, serverErr, navigate, loading, user]);
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -72,13 +63,44 @@ export default function Login({ children, onHandleSignUp }: LoginProps) {
             <DialogDescription className="text-center">
               Enter you email and password to sign in to your account
             </DialogDescription>
-            {appErr ? (
-              <DialogDescription className="text-red-500 text-center">
-                Something went wrong. Please try again.
-              </DialogDescription>
-            ) : null}
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="firstName" className="text-right">
+                First Name
+              </Label>
+              <Input
+                value={formik.values.firstName}
+                onChange={formik.handleChange("firstName")}
+                onBlur={formik.handleBlur("firstName")}
+                type="string"
+                id="firstName"
+                className="col-span-3"
+              />
+            </div>
+            {formik.touched.firstName && formik.errors.firstName ? (
+              <p className="text-red-500 text-right text-xs">
+                {formik.errors.firstName}
+              </p>
+            ) : null}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="lastName" className="text-right">
+                Last Name
+              </Label>
+              <Input
+                value={formik.values.lastName}
+                onChange={formik.handleChange("lastName")}
+                onBlur={formik.handleBlur("lastName")}
+                type="string"
+                id="lastName"
+                className="col-span-3"
+              />
+            </div>
+            {formik.touched.lastName && formik.errors.lastName ? (
+              <p className="text-red-500 text-right text-xs">
+                {formik.errors.lastName}
+              </p>
+            ) : null}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
                 Email
@@ -96,8 +118,6 @@ export default function Login({ children, onHandleSignUp }: LoginProps) {
               <p className="text-red-500 text-right text-xs">
                 {formik.errors.email}
               </p>
-            ) : appErr?.startsWith("No account found") ? (
-              <p className="text-red-500 text-right text-xs">{appErr}</p>
             ) : null}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="password" className="text-right">
@@ -116,27 +136,11 @@ export default function Login({ children, onHandleSignUp }: LoginProps) {
               <p className="text-red-500 text-right text-xs">
                 {formik.errors.password}
               </p>
-            ) : appErr?.startsWith("Incorrect password") ? (
-              <p className="text-red-500 text-right text-xs">{appErr}</p>
             ) : null}
           </div>
-          <div className="flex justify-between items-end">
-            <div>
-              <p className="mb-2">Don't have an account?</p>
-              <DialogClose asChild>
-                <Button variant="default" onClick={onHandleSignUp}>
-                  Sign Up
-                </Button>
-              </DialogClose>
-            </div>
-            <Button type="submit">
-              {loading ? (
-                <Spinner color="#fff" loading={loading} size={20} />
-              ) : (
-                "Submit"
-              )}
-            </Button>
-          </div>
+          <DialogFooter>
+            <Button type="submit">Submit</Button>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
