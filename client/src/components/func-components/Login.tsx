@@ -17,8 +17,8 @@ import { useAppSelector, useAppDispatch } from "@/state/hooks";
 import { userLoginAction } from "@/state/reducers/userReducer";
 import { selectTheme } from "@/state/reducers/themeReducer";
 import { selectUserValues } from "@/state/reducers/userReducer";
-import { ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { ReactNode } from "react";
+// import { useNavigate } from "react-router-dom";
 // import SignUp from "./Signup";
 import { DialogClose } from "@radix-ui/react-dialog";
 
@@ -34,10 +34,9 @@ const loginSchema = Yup.object({
 
 export default function Login({ children, onHandleSignUp }: LoginProps) {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const theme = useAppSelector(selectTheme);
   const userValues = useAppSelector(selectUserValues);
-  const { loading, user, appErr, serverErr } = userValues;
+  const { loading, appErr } = userValues;
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -48,12 +47,6 @@ export default function Login({ children, onHandleSignUp }: LoginProps) {
     },
     validationSchema: loginSchema,
   });
-
-  useEffect(() => {
-    if (!appErr && !serverErr && !loading && user) {
-      navigate("/anything");
-    }
-  }, [appErr, serverErr, navigate, loading, user]);
 
   return (
     <Dialog>

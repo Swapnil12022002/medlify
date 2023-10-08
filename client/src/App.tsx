@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Navbar from "./components/func-components/Navigation";
-import Home from "./components/func-components/Home";
 import { useAppSelector } from "./state/hooks";
 import { selectTheme } from "./state/reducers/themeReducer";
+import Navbar from "./components/func-components/Navigation";
+import Home from "./components/func-components/Home";
+import Map from "./components/func-components/Map";
 
 const router = createBrowserRouter([
   {
@@ -11,6 +12,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         Component: Home,
+      },
+      {
+        path: "/map",
+        Component: Map,
       },
     ],
   },

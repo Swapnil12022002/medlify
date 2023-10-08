@@ -97,6 +97,22 @@ export const userLoginAction = createAsyncThunk<
   }
 });
 
+export const userLogOutAction = createAsyncThunk<
+  User | undefined,
+  any,
+  { rejectValue: SerializedError }
+>("users/logout", async (_, { rejectWithValue }) => {
+  try {
+    localStorage.removeItem("userInfo");
+    return undefined;
+  } catch (error: any) {
+    if (!error.response) {
+      throw error;
+    }
+    return rejectWithValue(error.response.data);
+  }
+});
+
 const userSlice = createSlice({
   name: "users",
   initialState,
@@ -132,6 +148,23 @@ const userSlice = createSlice({
       state.serverErr = undefined;
     });
     builder.addCase(userLoginAction.rejected, (state, action) => {
+      state.loading = false;
+      state.appErr = action.payload?.message;
+      state.serverErr = action.error?.message;
+    });
+    //logout
+    builder.addCase(userLogOutAction.pending, (state) => {
+      state.loading = true;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(userLogOutAction.fulfilled, (state) => {
+      state.loading = false;
+      state.user = null;
+      state.appErr = undefined;
+      state.serverErr = undefined;
+    });
+    builder.addCase(userLogOutAction.rejected, (state, action) => {
       state.loading = false;
       state.appErr = action.payload?.message;
       state.serverErr = action.error?.message;

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -28,8 +29,11 @@ import Login from "./Login";
 import SignUp from "./Signup";
 import SignUpFromLogin from "./SignUpFromLogin";
 import { useAppSelector, useAppDispatch } from "@/state/hooks";
-import { selectTheme } from "@/state/reducers/themeReducer";
-import { toggleTheme } from "@/state/reducers/themeReducer";
+import { selectTheme, toggleTheme } from "@/state/reducers/themeReducer";
+import {
+  selectUserValues,
+  userLogOutAction,
+} from "@/state/reducers/userReducer";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdDarkMode } from "react-icons/md";
 import { BsLightbulb } from "react-icons/bs";
@@ -77,13 +81,24 @@ const components: { title: string; href: string; description: string }[] = [
 ];
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const theme = useAppSelector(selectTheme);
+  const userValues = useAppSelector(selectUserValues);
+  const { user } = userValues;
   const dispatch = useAppDispatch();
   const [signUpFromLogin, setAuthSignUpFromLogin] =
     React.useState<boolean>(false);
   const handleSignUpFromLogin = () => {
     setAuthSignUpFromLogin(!signUpFromLogin);
   };
+  React.useEffect(() => {
+    if (user) {
+      navigate("/map");
+    } else {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   return (
     <>
       <div className="flex flex-row justify-between items-center w-full h-[50px]">
@@ -195,16 +210,28 @@ export default function Navbar() {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        <div className="flex flex-row md:gap-[0.5px] lg:gap-4 pr-0 sm:pr-2 md:pr-3 lg:pr-5 min-[320px]:hidden md:block">
-          <Login onHandleSignUp={handleSignUpFromLogin}>Login</Login>
-          <SignUpFromLogin
-            onSignUp={signUpFromLogin}
-            onHandleSignUp={handleSignUpFromLogin}
-          >
-            Sign up
-          </SignUpFromLogin>
-          <SignUp>Sign up</SignUp>
-        </div>
+        {!user ? (
+          <div className="flex flex-row md:gap-[0.5px] lg:gap-4 pr-0 sm:pr-2 md:pr-3 lg:pr-5 min-[320px]:hidden md:block">
+            <Login onHandleSignUp={handleSignUpFromLogin}>Login</Login>
+            <SignUpFromLogin
+              onSignUp={signUpFromLogin}
+              onHandleSignUp={handleSignUpFromLogin}
+            >
+              Sign up
+            </SignUpFromLogin>
+            <SignUp>Sign up</SignUp>
+          </div>
+        ) : (
+          <div className="flex flex-row md:gap-[0.5px] lg:gap-4 pr-0 sm:pr-2 md:pr-3 lg:pr-5 min-[320px]:hidden md:block">
+            <Button
+              variant={theme ? "darkGhost" : "ghost"}
+              className={theme ? "text-white" : ""}
+              onClick={() => dispatch(userLogOutAction({}))}
+            >
+              Log Out
+            </Button>
+          </div>
+        )}
         <div className="md:hidden pr-0 sm:pr-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
