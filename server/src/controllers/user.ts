@@ -13,10 +13,12 @@ export const registerUserCtrl = asyncHandler(async (req, res) => {
     throw new BadRequestError(`User already exists with email : ${email}`);
   }
   const newUser = await User.create(req.body);
+  const token = newUser.generateToken();
   res.status(StatusCodes.CREATED).json({
     success: "true",
     message: "User created successfully",
     newUser,
+    token,
   });
 });
 
