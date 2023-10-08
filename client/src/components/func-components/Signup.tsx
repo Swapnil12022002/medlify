@@ -15,7 +15,8 @@ import * as Yup from "yup";
 import { useAppSelector, useAppDispatch } from "@/state/hooks";
 import { userRegisterAction } from "@/state/reducers/userReducer";
 import { selectTheme } from "@/state/reducers/themeReducer";
-import { ReactNode } from "react";
+import { selectUserValues } from "@/state/reducers/userReducer";
+import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
@@ -33,6 +34,8 @@ export default function SignUp({ children }: LoginProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const theme = useAppSelector(selectTheme);
+  const userValues = useAppSelector(selectUserValues);
+  const { loading, user, appErr, serverErr } = userValues;
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -42,10 +45,16 @@ export default function SignUp({ children }: LoginProps) {
     },
     onSubmit: (values) => {
       dispatch(userRegisterAction(values));
-      navigate("/anything");
     },
     validationSchema: loginSchema,
   });
+
+  useEffect(() => {
+    if (!appErr && !serverErr && !loading && user) {
+      navigate("/anything");
+    }
+  }, [appErr, serverErr, navigate, loading, user]);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -63,6 +72,11 @@ export default function SignUp({ children }: LoginProps) {
             <DialogDescription className="text-center">
               Enter you email and password to sign in to your account
             </DialogDescription>
+            {appErr ? (
+              <DialogDescription className="text-red-500 text-center">
+                Something went wrong. Please try again.
+              </DialogDescription>
+            ) : null}
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -118,6 +132,8 @@ export default function SignUp({ children }: LoginProps) {
               <p className="text-red-500 text-right text-xs">
                 {formik.errors.email}
               </p>
+            ) : appErr?.startsWith("User already exists with email") ? (
+              <p className="text-red-500 text-right text-xs">{appErr}</p>
             ) : null}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="password" className="text-right">
@@ -136,6 +152,8 @@ export default function SignUp({ children }: LoginProps) {
               <p className="text-red-500 text-right text-xs">
                 {formik.errors.password}
               </p>
+            ) : appErr?.startsWith("User already exists with email") ? (
+              <p className="text-red-500 text-right text-xs">{appErr}</p>
             ) : null}
           </div>
           <DialogFooter>

@@ -51,6 +51,7 @@ export const userRegisterAction = createAsyncThunk<
       user,
       config
     );
+    localStorage.setItem("userInfo", JSON.stringify(data));
     return data;
   } catch (error) {
     if (!axios.isAxiosError(error)) {
