@@ -7,4 +7,5 @@ export default cleanEnv(process.env, {
   JWT_SECRET: str(),
   EMAIL: str(),
   PASS: str(),
+  GOOGLE_MAPS_API_KEY: str(),
 });

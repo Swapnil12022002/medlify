@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import userRouter from "./routes/user";
+import mapRouter from "./routes/map";
 import notFound from "./middleware/notFound";
 import errorHandlerMiddleware from "./middleware/error-handler";
 
@@ -14,6 +15,7 @@ app.use(cors());
 
 //----Routes----//
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/maps", mapRouter);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 //---------------//
