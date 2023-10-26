@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -183,7 +183,7 @@ export default function Navbar() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <a href="/docs">
+                <NavLink to="/dashboard">
                   <NavigationMenuLink
                     className={
                       theme
@@ -191,9 +191,9 @@ export default function Navbar() {
                         : navigationMenuTriggerStyle()
                     }
                   >
-                    Documentation
+                    Dashboard
                   </NavigationMenuLink>
-                </a>
+                </NavLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink

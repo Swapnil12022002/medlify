@@ -4,6 +4,7 @@ import { selectTheme } from "./state/reducers/themeReducer";
 import Navbar from "./components/func-components/Navigation";
 import Home from "./components/func-components/Home";
 import Map from "./components/Map/Map";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
         Component: Map,
       },
     ],
+  },
+  {
+    path: "/dashboard",
+    Component: Dashboard,
   },
 ]);
 
