@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -44,8 +44,8 @@ const darkNavigationMenuTrigger =
 
 const components: { title: string; href: string; description: string }[] = [
   {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
+    title: "Medicines",
+    href: "/medicines",
     description:
       "A modal dialog that interrupts the user with important content and expects a response.",
   },
@@ -82,6 +82,7 @@ const components: { title: string; href: string; description: string }[] = [
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const theme = useAppSelector(selectTheme);
   const userValues = useAppSelector(selectUserValues);
   const { user } = userValues;
@@ -95,9 +96,9 @@ export default function Navbar() {
     if (user) {
       navigate("/map");
     } else {
-      navigate("/");
+      navigate(`${location.pathname}`);
     }
-  }, [user, navigate]);
+  }, [user, navigate, location.pathname]);
 
   return (
     <>

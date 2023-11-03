@@ -3,6 +3,7 @@ import { useAppSelector } from "./state/hooks";
 import { selectTheme } from "./state/reducers/themeReducer";
 import Navbar from "./components/func-components/Navigation";
 import Home from "./components/func-components/Home";
+import Medicines from "./components/func-components/Medicines";
 import Map from "./components/Map/Map";
 import Dashboard from "./components/Dashboard/Dashboard";
 
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: "/map",
         Component: Map,
+      },
+      {
+        path: "/medicines",
+        Component: Medicines,
       },
     ],
   },

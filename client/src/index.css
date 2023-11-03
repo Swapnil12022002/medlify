@@ -7,7 +7,7 @@
     @apply border-border;
   }
   body {
-    @apply font-satoshi font-normal text-base text-body bg-whiten relative z-1;
+    @apply font-satoshi font-normal text-base bg-whiten relative z-1;
   }
   :root {
     --background: 0 0% 100%;
