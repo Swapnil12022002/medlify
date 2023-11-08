@@ -1,4 +1,4 @@
-import {Schema, model, Model } from "mongoose";
+import { Schema, model, Model, ObjectId } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import env from "../../utils/validateEnv";
@@ -10,6 +10,7 @@ interface IUser {
   email: string;
   password: string;
   role: "user" | "doctor" | "admin";
+  AIChat: ObjectId[];
   passwordResetToken?: string;
   passwordResetExpires?: Date;
 }
@@ -49,6 +50,12 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       enum: ["user", "doctor", "admin"],
       default: "user",
     },
+    AIChat: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Bard",
+      },
+    ],
     passwordResetToken: String,
     passwordResetExpires: Date,
   },
@@ -84,8 +91,6 @@ userSchema.methods.generateResetPasswordToken = function (): string {
     .digest("hex");
   this.passwordResetExpires = Date.now() + 20 * 60 * 1000;
   return resetToken;
-}
+};
 
-
-
-export default model<IUser, UserModel>('User', userSchema);
+export default model<IUser, UserModel>("User", userSchema);

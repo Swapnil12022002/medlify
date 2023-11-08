@@ -8,4 +8,5 @@ export default cleanEnv(process.env, {
   EMAIL: str(),
   PASS: str(),
   GOOGLE_MAPS_API_KEY: str(),
+  BARD_API_KEY: str(),
 });

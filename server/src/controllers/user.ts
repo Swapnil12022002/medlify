@@ -50,7 +50,9 @@ export const getAllUsersCtrl = asyncHandler(async (req, res) => {
 
 export const getUserByIdCtrl = asyncHandler(async (req, res) => {
   const { id: userId } = req.params;
-  const user = await User.findById(userId).select("-password");
+  const user = await User.findById(userId)
+    .select("-password")
+    .populate("AIChat");
   if (!user) {
     throw new BadRequestError(`No user found with id: ${userId}`);
   }
